@@ -1,0 +1,52 @@
+[
+	{
+		"brand": "Ferrari",
+		"model": "458 Italia",
+		"price": 300000,
+		"image": "https://acnews.blob.core.windows.net/imgnews/large/0_0_20090728103805160.jpg",
+		"code": 1,
+		"stock": 3,
+		"id": 1,
+		"status": "true"
+	},
+	{
+		"brand": "Porsche",
+		"model": "991 GT3 rs",
+		"price": 239167,
+		"image": "https://motorvault.co.uk/assets/image-cache/galleries/268/3566_IMG_1255.601b6d9f.jpg",
+		"code": 2,
+		"stock": 7,
+		"id": 2,
+		"status": true
+	},
+	{
+		"brand": "Porsche",
+		"model": "991 GT3 rs",
+		"price": 200000,
+		"image": "https://motorvault.co.uk/assets/image-cache/galleries/268/3566_IMG_1255.601b6d9f.jpg",
+		"code": 3,
+		"stock": 10,
+		"id": 3,
+		"status": true
+	},
+	{
+		"brand": "Mercedes Benz",
+		"model": "A200",
+		"price": 29900,
+		"image": "https://i.ytimg.com/vi/fFM5Xdoodpo/maxresdefault.jpg",
+		"code": 4,
+		"stock": 24,
+		"id": 4,
+		"status": true
+	},
+	{
+		"brand": "Nissan",
+		"model": "GT-R",
+		"price": "80000",
+		"image": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/nissan-gtr-2022-japon-portada-1631625941.jpg",
+		"code": "5",
+		"stock": "200",
+		"status": "true",
+		"id": 5
+	}
+]
