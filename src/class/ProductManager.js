@@ -24,43 +24,35 @@ export default class ProductManager {
     };
 
     addCar = async (data) => {
-        const car = data;
-        const cars = await this.getCars()
+        try {
+            const car = data;
+            const cars = await this.getCars();
 
-        if (cars.length) {
-            car.id = cars[cars.length - 1].id + 1
-        } else {
-            car.id = 1
+            const lastCar = cars[cars.length - 1];
+            car.id = lastCar ? lastCar.id + 1 : 1;
+
+            // Check if the car with the given code already exists
+            const existe = cars.some((e) => e.code === car.code);
+            if (existe) {
+                console.error(`El código ${car.code} ya se encuentra REGISTRADO`);
+            }
+            if (!car.status) {
+                car.status = true;
+            }
+
+            // Check if all required fields are present
+            const requiredFields = ['brand', 'model', 'price', 'image', 'code', 'stock', 'status'];
+            const hasAllFields = requiredFields.every((field) => car.hasOwnProperty(field));
+            if (hasAllFields) {
+                cars.push(car);
+                await fs.promises.writeFile(this.path, JSON.stringify(cars, null, "\t"));
+                return car;
+            } else {
+                console.error('Todos los campos son obligatorios. Revise los datos para poder continuar');
+            }
+        } catch (error) {
+            throw new Error("Error al agregar el auto:", error.message);
         }
-
-        const existe = cars.filter(e => e.code === car.code)
-
-        if (existe.length) {
-            return console.error(`El código ${car.code} ya se encuentra REGISTRADO`)
-        }
-
-        if (!car.status) {
-            car.status = true
-        }
-
-        if (car.brand,
-            car.model,
-            car.price,
-            car.image,
-            car.code,
-            car.stock,
-            car.status) {
-            cars.push(car);
-
-            await fs.promises.writeFile(
-                this.path,
-                JSON.stringify(cars, null, "\t")
-            );
-            return cars;
-        } else {
-            console.error('Todos los campos son obligatorios. Revise los datos para poder continuar')
-        }
-
     }
 
     getCarById = async (id) => {
@@ -93,6 +85,27 @@ export default class ProductManager {
             JSON.stringify(jsonData, null, "\t")
         );
         console.log(`Se modificó el producto con id ${id}`)
-        return jsonData.filter((e) => e.id === id);
+        return jsonData.find((e) => e.id === id);
     };
+
+    async deleteCar(id) {
+        const data = await fs.promises.readFile(this.path, "utf-8");
+        const jsonData = JSON.parse(data);
+        const index = jsonData.findIndex(car => car.id === id);
+
+        if (index !== -1) {
+            jsonData.splice(index, 1);
+            try {
+                await fs.promises.writeFile(
+                    this.path,
+                    JSON.stringify(jsonData, null, "\t")
+                );
+                return `El auto con id ${id} fue eliminado`
+            } catch (error) {
+                throw new Error('Error eliminando el auto');
+            }
+        } else {
+            console.error('Product not found');
+        }
+    }
 }
