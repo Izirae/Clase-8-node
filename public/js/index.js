@@ -11,14 +11,16 @@ function addCar(car) {
                 <td class="py-5">${car.stock} unidades</td>
               `
   const tr = document.createElement('tr');
-  tr.id = car.id;
+  tr.id = car._id;
 
   tr.innerHTML = html;
   table.appendChild(tr);
 }
 
 function deleteCar(carId) {
+  console.log(carId, "hola")
   const car = document.getElementById(carId);
+  console.log(car, "este estaba")
 
   if (car) {
     table.removeChild(car);
@@ -50,7 +52,7 @@ socket.on('initCars', (cars) => {
 });
 
 socket.on("updateCar", (car) => {
-  deleteCar(car.id);
+  deleteCar(car._id);
   addCar(car);
 });
 

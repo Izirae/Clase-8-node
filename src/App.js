@@ -5,11 +5,12 @@ import routerCart from "./routes/cart.router.js";
 import routerProduct from "./routes/products.router.js";
 import viewsRouter from "./routes/views.router.js"
 
-import ProductManager from "./class/ProductManager.js";
+import ProductManager from "./DAOs/ProductManagerMongo.class.js";
+import { messagesModel } from "./DAOs/models/messages.model.js";
 
 import { Server } from "socket.io";
 
-export const prodManager = new ProductManager(__dirname + "/class/files/products.json");
+export const prodManager = new ProductManager();
 
 const app = express();
 
@@ -29,11 +30,21 @@ const server = app.listen(8080, () => console.log("Server running. PORT 8080"));
 
 const socketServer = new Server(server);
 const cars = await prodManager.getCars()
+let mensajes = await messagesModel.find()
 
 socketServer.on("connection", socket => {
   socketServer.emit('initCars', cars);
-  socket.on("message", data => {
-    console.log(data);
+  socketServer.emit('imprimir', mensajes);
+
+  socket.on("message", (data) => {
+    console.log("esto son los mensajes", data);
+    mensajes.push(data);
+    socketServer.emit("imprimir", mensajes);
+    messagesModel.create(data);
+  });
+
+  socket.on("authenticatedUser", (data) => {
+    socket.broadcast.emit("newUserAlert", data);
   });
 });
 
