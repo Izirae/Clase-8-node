@@ -3,7 +3,6 @@ import { cartsModel } from "./models/carts.model.js";
 export default class CartManager {
     connection = mongoose.connect(
         "mongodb+srv://lautarobazzola:0zv80h92MWEGQi3Q@cluster0.yoldw0l.mongodb.net/ecommerce?retryWrites=true&w=majority"
-        //0zv80h92MWEGQi3Q
     );
     async getCart() {
         let result = await cartsModel.find();
@@ -12,7 +11,11 @@ export default class CartManager {
     }
 
     async addCart() {
-        let result = await cartsModel.create([]);
+        let cart = {
+            product: [],
+        };
+        console.log(cart);
+        let result = await cartsModel.create(cart);
         console.log(result);
         return result;
     }
@@ -23,9 +26,16 @@ export default class CartManager {
         return result;
     }
 
-    async addToCart(idCart, idProduct) {
+    async addToCart(idCart, idProduct, q) {
         let cart = await this.getCartById(idCart);
-        console.log(cart);
-        // cid es el id del carrito, pid es el id del producto
+        cart.products.push({ id: idProduct, quantity: q });
+
+        let result = await cartsModel.updateOne(
+            { _id: idCart },
+            { $set: cart }
+        );
+
+        console.log(result);
+        return result;
     }
 }

@@ -1,8 +1,7 @@
 import { Router } from "express";
-import CartManager from "../DAOs/CartManagerMongo.class.js";
-
+import ManagerCarts from "../DAOs/CartManagerMongo.class.js";
 const router = Router();
-const managerCarts = new CartManager();
+const managerCarts = new ManagerCarts();
 
 router.get("/", async (req, res) => {
   const carts = await managerCarts.getCart();
@@ -20,11 +19,13 @@ router.post("/", async (req, res) => {
   res.send({ status: "success" });
 });
 
-router.post("/:cid/add/:pid", async (req, res) => {
+router.post("/:cid/products/:pid/quantity/:q", async (req, res) => {
+  console.log(req.params.cid, req.params.pid, req.params.q);
   const cartId = req.params.cid;
   const productId = req.params.pid;
+  const quantity = req.params.q;
 
-  await managerCarts.addToCart(cartId, productId);
+  await managerCarts.addToCart(cartId, productId, quantity);
   res.send({ status: "success" });
 });
 
