@@ -5,7 +5,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "nodemon src/App.js",
+        "dev": "nodemon src/App.js",
         "start": "node src/App.js"
     },
     "keywords": [],
@@ -16,6 +16,7 @@
         "express-handlebars": "^7.0.7",
         "fs": "^0.0.1-security",
         "mongoose": "^7.3.0",
+        "mongoose-paginate-v2": "^1.7.1",
         "nodemon": "^2.0.22",
         "socket.io": "^4.6.1",
         "uuid": "^9.0.0"

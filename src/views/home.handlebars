@@ -1,3 +1,33 @@
+<div class="container">
+  <div class="input-group">
+    <a class="btn btn-primary me-1" href="http://localhost:8080/?limit=5">
+      Limite de 5
+    </a>
+
+    <a class="btn btn-primary me-1" href="http://localhost:8080/?sort=1">
+      ordenar por precio ascendente
+    </a>
+
+    <a class="btn btn-primary me-3" href="http://localhost:8080/?sort=-1">
+      ordenar por precio descendente
+    </a>
+
+    <select class="form-selec col-1" name="filtro" id="filtro">
+      <option selected value="brand">
+        Marca
+      </option>
+      <option value="model">
+        Modelo
+      </option>
+      <option value="price">
+        Precio
+      </option>
+    </select>
+    <input class="form-control" type="text" name="buscar" id="buscar" placeholder="Buscar..." />
+    <button class="btn btn-primary" type="button" onclick="filtro()">
+      Buscar
+    </button>
+  </div>
 <div class="container mt-5"<td class="py-5"></td><table class="table table-responsive table-bordered table-dark table-striped">
     <thead>
       <tr>
@@ -6,18 +36,94 @@
         <th class="text-center">Precio</th>
         <th class="text-center">Imagen</th>
         <th class="text-center">Unidades Disponibles</th>
+        <th class="text-center"></th>
       </tr>
     </thead>
     <tbody>
-      {{#each products}}
+      {{#each product.docs}}
         <tr>
-          <td class="py-5">{{brand}}</td>
-          <td class="py-5">{{model}}</td>
-          <td class="py-5">${{price}}</td>
-          <td><img style="max-width: 200px;" src="{{image}}" /></td>
-          <td class="py-5">{{stock}} unidades</td>
+          <td class="text-center pt-5">{{brand}}</td>
+          <td class="text-center pt-5">{{model}}</td>
+          <td class="text-center pt-5">${{price}}</td>
+          <td class="text-center"><img style="max-width: 200px;" src="{{image}}" /></td>
+          <td class="text-center pt-5">{{stock}} unidades</td>
+          <td class="text-center pt-5">
+            <button id="{{_id}}" type="button" onclick="addToCart(this.id)" class="btn btn-primary">
+              Añadir al carrito
+            </button>
+          </td>
         </tr>
       {{/each}}
     </tbody>
   </table>
 </div>
+  <br />
+  <div class="d-flex justify-content-center">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item">
+          {{#if product.hasPrevPage}}
+          <a class="page-link" href={{product.prevLink}}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" fill="currentColor"
+              class="bi bi-arrow-left-short" viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+                d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z">
+              </path>
+            </svg>
+          </a>
+          {{/if}}
+        </li>
+        <li class="page-item">
+          <spam class="page-link">
+            {{product.page}}
+          </spam>
+        </li>
+        <li class="page-item">
+          {{#if product.hasNextPage}}
+          <a class="page-link" href={{product.nextLink}}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" fill="currentColor"
+              class="bi bi-arrow-right-short" viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+                d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z">
+              </path>
+            </svg>
+          </a>
+          {{/if}}
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <script>
+    async function addToCart(id) {
+      let idProduct = id
+      let idCart = '64a357765be758012cc5dbeb'
+      let quantity = 2
+      let result = await axios.post(`/api/cart/${idCart}/products/${idProduct}/quantity/${quantity}`)
+      console.log(result.status)
+      if (result.status === 200) {
+        Swal.fire({
+          position: 'Center',
+          icon: 'success',
+          title: 'Productro Agregado Correctamente',
+          showConfirmButton: false,
+          timer: 1500
+        })
+
+      } else {
+        Swal.fire({
+          position: 'Center',
+          icon: 'error',
+          title: 'Error al Cargar el Producto',
+          showConfirmButton: false,
+          timer: 1500
+        })
+      }
+    }
+    function filtro() {
+      let filtro = document.getElementById("filtro").value
+      let filtroVal = document.getElementById("buscar").value
+      console.log(filtroVal, "hola dani, qué hay aca?")
+      window.location = `http://localhost:8080/?filtro=${filtro}&filtroVal=${filtroVal}`
+    }
+  </script>

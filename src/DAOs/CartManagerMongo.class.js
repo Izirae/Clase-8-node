@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { cartsModel } from "./models/carts.model.js";
+import { prodManager } from "../App.js";
 export default class CartManager {
     connection = mongoose.connect(
         "mongodb+srv://lautarobazzola:0zv80h92MWEGQi3Q@cluster0.yoldw0l.mongodb.net/ecommerce?retryWrites=true&w=majority"
@@ -21,21 +22,56 @@ export default class CartManager {
     }
 
     async getCartById(id) {
-        console.log(id);
-        let result = await cartsModel.findOne({ _id: id });
+        let result = await cartsModel
+            .findOne({ _id: id })
+            .populate("products.product");
         return result;
     }
 
     async addToCart(idCart, idProduct, q) {
+        let product = await prodManager.getCarById(idProduct);
         let cart = await this.getCartById(idCart);
-        cart.products.push({ id: idProduct, quantity: q });
+        cart.products.push({ product: product, quantity: q });
 
-        let result = await cartsModel.updateOne(
-            { _id: idCart },
-            { $set: cart }
+        await cart.save();
+
+        return;
+    }
+
+    async deleteProductFromCart(idCart, idProduct) {
+        const cart = await this.getCartById(idCart);
+        cart.products.pull(idProduct);
+        await cart.save();
+        return;
+    }
+
+    async deleteAllProductsFromCart(idCart) {
+        const cart = await this.getCartById(idCart);
+        cart.products = [];
+        await cart.save();
+        return;
+    }
+
+    async updateCartQuantity(idCart, idProduct, q) {
+        let cart = await this.getCartById(idCart);
+        let productos = cart.products;
+        let este = productos.find(
+            (prod) => prod.product.valueOf() === idProduct
         );
+        este.quantity = q;
 
-        console.log(result);
-        return result;
+        await cart.save();
+        return;
+    }
+    async updateCartProducts(idCart, data) {
+        await this.deleteAllProductsFromCart(idCart);
+        let cart = await this.getCartById(idCart);
+        data.data.forEach((e) => {
+            cart.products.push(e);
+        });
+
+        await cart.save();
+
+        return;
     }
 }

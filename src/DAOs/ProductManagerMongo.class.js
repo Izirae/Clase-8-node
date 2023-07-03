@@ -7,12 +7,35 @@ export default class ProductManager {
     );
 
     async addCar(car) {
-        let result = await productsModel.create(car);
-        return result;
+        try {
+            let result = await productsModel.create(car);
+            return result;
+        } catch (e) {
+            console.log(e);
+            return e;
+        }
     }
 
-    async getCars() {
-        let result = await productsModel.find();
+    async getCars(limit = 10,
+        page = 1,
+        sort = 0,
+        filtro = null,
+        filtroVal = null) {
+        let whereOptions = {};
+
+        if (filtro != null && filtroVal != null) {
+            whereOptions = {
+                [filtro]: new RegExp(filtroVal, "i"),
+            };
+        }
+
+        let result = await productsModel.paginate(whereOptions, {
+            limit: limit,
+            page: page,
+            sort: { price: sort },
+            lean: true,
+        });
+
         return result;
     }
 

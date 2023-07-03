@@ -4,13 +4,14 @@ import __dirname from "./utils.js";
 import routerCart from "./routes/cart.router.js";
 import routerProduct from "./routes/products.router.js";
 import viewsRouter from "./routes/views.router.js"
-
+import CartManager from "./DAOs/CartManagerMongo.class.js";
 import ProductManager from "./DAOs/ProductManagerMongo.class.js";
 import { messagesModel } from "./DAOs/models/messages.model.js";
 
 import { Server } from "socket.io";
 
 export const prodManager = new ProductManager();
+export const CartsManager = new CartManager();
 
 const app = express();
 

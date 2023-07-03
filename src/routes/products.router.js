@@ -6,7 +6,22 @@ const router = Router();
 const ProductsManager = new ProductManager();
 
 router.get("/", async (req, res) => {
-  const cars = await ProductsManager.getCars();
+  let limit = parseInt(req.query.limit);
+  let page = parseInt(req.query.page);
+  let sort = parseInt(req.query.sort);
+  let filtro = req.query.filtro;
+  let filtroVal = req.query.filtroVal;
+  if (!limit) {
+    limit = 9;
+  }
+  if (!page) {
+    page = 1;
+  }
+  const cars = await ProductsManager.getCars(limit,
+    page,
+    sort,
+    filtro,
+    filtroVal);
   res.send(cars);
 });
 
