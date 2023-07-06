@@ -2,7 +2,35 @@ import { Router } from "express";
 import { prodManager, CartsManager } from "../App.js";
 const router = Router();
 
-router.get('/', async (req, res) => {
+router.get("/register", (req, res) => {
+    res.render("register");
+});
+
+router.get("/", (req, res) => {
+    res.render("login");
+});
+router.get("/profile", (req, res) => {
+    console.log(req.session);
+    res.render("profile", {
+        user: req.session.user,
+        isAdmin: req.session.user.rol === 'admin'
+    });
+});
+router.get("/logout", (req, res) => {
+    if (req.session) {
+        req.session.destroy((err) => {
+            if (err) {
+                res.status(400).send("Unable to log out");
+            } else {
+                res.redirect("/");
+            }
+        });
+    } else {
+        res.redirect("/");
+    }
+});
+
+router.get('/home', async (req, res) => {
     let limit = parseInt(req.query.limit);
     let page = parseInt(req.query.page);
     let sort = parseInt(req.query.sort);
