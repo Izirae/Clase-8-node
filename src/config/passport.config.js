@@ -26,7 +26,7 @@ export const intializePassport = () => {
                     let newUser = {
                         first_name: profile.username,
                         last_name: "test lastname",
-                        email: profile.profileUrl,
+                        email: profile.username,
                         age: 25,
                         password: "1234",
                     };
