@@ -23,8 +23,8 @@ router.get("/logout", (req, res) => {
             if (err) {
                 res.status(400).send("Unable to log out");
             } else {
-                if (req.cookies["tokenCookie"]) {
-                    res.clearCookie("tokenCookie").status(200).redirect("/");
+                if (req.cookies["coderCookie"]) {
+                    res.clearCookie("coderCookie").status(200).redirect("/");
                 }
             }
         });
