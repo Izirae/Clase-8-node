@@ -4,6 +4,9 @@ import MongoStore from "connect-mongo";
 import { engine } from "express-handlebars";
 import { Server } from "socket.io";
 import __dirname from "./utils.js";
+import { intializePassport } from "./config/passport.config.js";
+import passport from "passport";
+import cookieParser from "cookie-parser";
 
 import routerCart from "./routes/cart.router.js";
 import routerProduct from "./routes/products.router.js";
@@ -23,6 +26,10 @@ const app = express();
 app.use(express.static('./public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(cookieParser());
+app.use(passport.initialize());
+intializePassport();
 
 app.engine('handlebars', engine());
 app.set('views', __dirname + "/views");

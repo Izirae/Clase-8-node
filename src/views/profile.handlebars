@@ -1,6 +1,6 @@
 <div>
     <nav class="nav m-5">
-      <a class="nav-link" aria-current="page" href="/">Home</a>
+      <a class="nav-link" aria-current="page" href="/home">Home</a>
       <a class="nav-link" aria-current="page" href="/chat">Chat</a>
       <a class="nav-link" aria-current="page" href="/realtimeproducts">Real Time Products</a>
       <a class="nav-link" aria-current="page" href="/cart">Carrito</a>
@@ -30,7 +30,7 @@
           Datos de la cuenta
         </h5>
         <p class="card-text">
-          Nombre : {{user.name}}
+          Nombre : {{user.first_name}} {{user.last_name}}
         </p>
         <p>
           Edad :{{user.age}} años
