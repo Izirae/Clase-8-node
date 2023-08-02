@@ -3,6 +3,7 @@ import UsersManager from "../DAOs/UsersManagerMongo.class.js";
 import passport from "passport";
 import { createHash } from "../utils.js";
 import jwt from "jsonwebtoken";
+import config from "../config/config.js";
 
 const UsersManagers = new UsersManager();
 const router = Router();
@@ -43,7 +44,7 @@ router.post(
         };
         let token = jwt.sign(
             { email: req.user.email, first_name: req.user.first_name },
-            "EsteEsElSecreto",
+            config.jwtKey,
             {
                 expiresIn: "24h",
             }
@@ -103,10 +104,11 @@ router.get(
     passport.authenticate("github", { session: false, failureRedirect: "/" }),
     async (req, res) => {
         try {
+            console.log("hola, llegue")
             req.session.user = req.user;
             const token = jwt.sign(
                 { email: req.user.email, first_name: req.user.first_name },
-                "EsteEsElSecreto",
+                config.jwtKey,
                 { expiresIn: "24h" }
             );
             res.cookie("coderCookie", token, { httpOnly: true }).redirect(

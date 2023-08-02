@@ -8,6 +8,8 @@ import { intializePassport } from "./config/passport.config.js";
 import passport from "passport";
 import cookieParser from "cookie-parser";
 
+import config from "./config/config.js";
+
 import routerCart from "./routes/cart.router.js";
 import routerProduct from "./routes/products.router.js";
 import viewsRouter from "./routes/views.router.js"
@@ -38,10 +40,9 @@ app.set('view engine', 'handlebars');
 app.use(
   session({
     store: new MongoStore({
-      mongoUrl:
-        "mongodb+srv://lautarobazzola:0zv80h92MWEGQi3Q@cluster0.yoldw0l.mongodb.net/ecommerce?retryWrites=true&w=majority",
+      mongoUrl: config.mongoUrl,
     }),
-    secret: "mongoSecret",
+    secret: config.mongoSecret,
     resave: true,
     saveUninitialized: false,
   })
@@ -52,7 +53,7 @@ app.use("/api/products/", routerProduct);
 app.use("/api/cart", routerCart);
 app.use('/', viewsRouter);
 
-const server = app.listen(8080, () => console.log("Server running. PORT 8080"));
+const server = app.listen(config.port, () => console.log(`Server running. PORT ${config.port}`));
 
 const socketServer = new Server(server);
 const cars = await prodManager.getCars()

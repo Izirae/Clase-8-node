@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
 import { productsModel } from "./models/products.model.js";
+import config from "../config/config.js";
 
 export default class ProductManager {
-    connection = mongoose.connect(
-        "mongodb+srv://lautarobazzola:0zv80h92MWEGQi3Q@cluster0.yoldw0l.mongodb.net/ecommerce?retryWrites=true&w=majority"
-    );
+    connection = mongoose.connect(config.mongoUrl);
 
     async addCar(car) {
         try {

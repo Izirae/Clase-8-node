@@ -1,16 +1,16 @@
 import mongoose from "mongoose";
 import { userModel } from "./models/users.model.js";
+import config from "../config/config.js";
 
 export default class UsersManager {
-    connection = mongoose.connect(
-        "mongodb+srv://lautarobazzola:0zv80h92MWEGQi3Q@cluster0.yoldw0l.mongodb.net/ecommerce?retryWrites=true&w=majority"
-    );
+    connection = mongoose.connect(config.mongoUrl);
     async getUser(email) {
         const user = await userModel.findOne({
             email: email,
         });
         return user;
     }
+
     async authUser(email, password) {
         const user = await userModel.findOne({
             email: email,
@@ -22,13 +22,12 @@ export default class UsersManager {
     }
     async createUser(data) {
         const exist = await this.getUser(data.email);
-        console.log(exist);
+        console.log("existe");
         if (exist) {
             return false;
         } else {
             data.rol = "usuario";
-
-            console.log(data);
+            console.log("lo crea");
             const res = await userModel.create(data);
             return true, res;
         }
