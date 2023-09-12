@@ -14,16 +14,22 @@ import routerCart from "./routes/cart.router.js";
 import routerProduct from "./routes/products.router.js";
 import viewsRouter from "./routes/views.router.js"
 import sessionRouter from "./routes/session.router.js";
+import mockingproducts from "./routes/mocking.router.js";
 
 import CartManager from "./DAOs/CartManagerMongo.class.js";
 import ProductManager from "./DAOs/ProductManagerMongo.class.js";
 
 import { messagesModel } from "./DAOs/models/messages.model.js";
 
+import routerLogger from './routes/logger.router.js';
+import { errorMiddleware } from './middleware/error.middleware.js';
+import { addLogger } from './config/logger.config.js';
+
 export const prodManager = new ProductManager();
 export const CartsManager = new CartManager();
 
 const app = express();
+app.use(addLogger)
 
 app.use(express.static('./public'));
 app.use(express.json());
@@ -42,21 +48,26 @@ app.use(
     store: new MongoStore({
       mongoUrl: config.mongoUrl,
     }),
+    autoRemove: 'native',
     secret: config.mongoSecret,
     resave: true,
     saveUninitialized: false,
   })
 );
 
+app.use('/', viewsRouter);
 app.use("/api/sessions", sessionRouter);
 app.use("/api/products/", routerProduct);
 app.use("/api/cart", routerCart);
-app.use('/', viewsRouter);
+app.use("/api/mockingproducts", mockingproducts);
+app.use('/logger/', routerLogger)
+app.use(errorMiddleware)
 
 const server = app.listen(config.port, () => console.log(`Server running. PORT ${config.port}`));
 
 const socketServer = new Server(server);
 const cars = await prodManager.getCars()
+console.log(cars)
 let mensajes = await messagesModel.find()
 
 socketServer.on("connection", socket => {

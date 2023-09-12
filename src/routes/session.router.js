@@ -4,6 +4,7 @@ import passport from "passport";
 import { createHash } from "../utils.js";
 import jwt from "jsonwebtoken";
 import config from "../config/config.js";
+import CurrentUserDTO from "../DTO/user.dto.js";
 
 const UsersManagers = new UsersManager();
 const router = Router();

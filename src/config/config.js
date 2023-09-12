@@ -10,5 +10,6 @@ export default {
   gitClientId: process.env.PASSPORT_GIT_CLIENT_ID,
   gitClientsecret: process.env.PASSPORT_GIT_CLIENT_SECRET,
   githubCallbackPath: process.env.PASSPORT_CALLBACK_URL,
-  passwordUser: process.env.PASSWORD_NEW_USER
+  passwordUser: process.env.PASSWORD_NEW_USER,
+  ENVIRONMENT: process.env.ENVIRONMENT
 };

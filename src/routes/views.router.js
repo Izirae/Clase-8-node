@@ -1,16 +1,23 @@
 import { Router } from "express";
 import { prodManager, CartsManager } from "../App.js";
+import { rolesMiddlewareUser } from "../middleware/role.middleware.js";
+import passport from "passport";
+
 const router = Router();
 
 router.get("/register", (req, res) => {
     res.render("register");
 });
 
+router.get("/resetPassword", (req, res) => {
+    res.render("resetPassword");
+});
+
 router.get("/", (req, res) => {
     res.render("login");
 });
+
 router.get("/profile", (req, res) => {
-    console.log(req.session);
     res.render("profile", {
         user: req.session.user,
         isAdmin: req.session.user.rol === 'admin'
@@ -57,7 +64,12 @@ router.get('/home', async (req, res) => {
                 ? `http://localhost:8080/?page=${product.nextPage}`
                 : "";
             product.isValid = !(page <= 0 || page > product.totalPages);
-            res.render('home', { title: "Productos", product })
+            res.render("home", {
+                title: "Productos",
+                user: req.session.user,
+                cart: JSON.stringify(req.session.user.cart),
+                product,
+            });
         });
 });
 
@@ -65,22 +77,27 @@ router.get('/realtimeproducts', async (req, res) => {
     await prodManager.getCars()
         .then(() => {
             res.render('realTimeProducts', { title: "Productos en tiempo real" })
-
         });
 });
 
-router.get("/chat", (req, res) => {
-    res.render("chat", { title: "Chat" });
-});
+router.get(
+    "/chat",
+    passport.authenticate("jwt", { session: false }),
+    rolesMiddlewareUser,
+    async (req, res) => {
+        res.render("chat", { title: "Chat" });
+    }
+);
 
 router.get("/cart", async (req, res) => {
-    let cartId = "64a357765be758012cc5dbeb";
+    let cartId = req.session.user.cart;
     await CartsManager.getCartById(cartId).then((product) => {
         let products = JSON.stringify(product.products);
         products = JSON.parse(products);
         res.render("cart", {
             title: "Carrito",
             products,
+            cartId,
         });
     });
 });

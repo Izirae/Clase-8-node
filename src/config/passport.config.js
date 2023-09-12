@@ -22,13 +22,13 @@ export const intializePassport = () => {
                 callbackURL: config.githubCallbackPath,
             },
             async (accessToken, refreshToken, profile, done) => {
-                console.log(profile);
+
                 let user = await UsersManagers.getUser(profile._json.html_url);
 
                 if (!user) {
                     let newUser = {
                         first_name: profile.username,
-                        last_name: "test lastname",
+                        last_name: "github",
                         email: profile.profileUrl,
                         age: 25,
                         password: config.passwordUser,
@@ -36,12 +36,14 @@ export const intializePassport = () => {
                     const newHashedPassword = createHash(newUser.password);
                     newUser.password = newHashedPassword;
                     const result = await UsersManagers.createUser(newUser);
+                    // result._doc.name = `${result._doc.first_name} ${result._doc.last_name}`;
                     done(null, result);
                 } else {
                     console.log("usuario existente");
                     const result = await UsersManagers.getUser(
                         profile.profileUrl
                     );
+                    // result._doc.name = `${result._doc.first_name} ${result._doc.last_name}`;
                     done(null, result);
                 }
             }
