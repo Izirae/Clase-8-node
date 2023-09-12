@@ -67,7 +67,7 @@ const server = app.listen(config.port, () => console.log(`Server running. PORT $
 
 const socketServer = new Server(server);
 const cars = await prodManager.getCars()
-console.log(cars)
+
 let mensajes = await messagesModel.find()
 
 socketServer.on("connection", socket => {

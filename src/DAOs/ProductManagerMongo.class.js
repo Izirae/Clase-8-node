@@ -42,11 +42,13 @@ export default class ProductManager {
         }
     }
 
-    async getCars(limit = 10,
+    async getCars(
+        limit = 10,
         page = 1,
         sort = 0,
         filtro = null,
-        filtroVal = null) {
+        filtroVal = null
+    ) {
         let whereOptions = {};
 
         if (filtro != null && filtroVal != null) {
@@ -55,14 +57,14 @@ export default class ProductManager {
             };
         }
 
-        let result = await productsModel.paginate(whereOptions, {
+        let result = await productsModel.paginate({}, {
             limit: limit,
             page: page,
             sort: { price: sort },
             lean: true,
         });
 
-        console.log("llega?1")
+        console.log(result, "aaaaaaaaa")
 
         return result;
     }
