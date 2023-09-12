@@ -125,7 +125,8 @@ router.get(
     "/current",
     passport.authenticate("jwt", { session: false }),
     (req, res) => {
-        res.send(req.user);
+        console.log(req.session.user);
+        res.send(new CurrentUserDTO(req.session.user));
     }
 );
 

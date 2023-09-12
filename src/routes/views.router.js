@@ -58,10 +58,10 @@ router.get('/home', async (req, res) => {
             let product = raw
             console.log(product)
             product.prevLink = product.hasPrevPage
-                ? `http://localhost:8080/?page=${product.prevPage}`
+                ? `http://localhost:8080/home?page=${product.prevPage}`
                 : "";
             product.nextLink = product.hasNextPage
-                ? `http://localhost:8080/?page=${product.nextPage}`
+                ? `http://localhost:8080/home?page=${product.nextPage}`
                 : "";
             product.isValid = !(page <= 0 || page > product.totalPages);
             res.render("home", {

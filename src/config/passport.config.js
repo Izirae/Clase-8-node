@@ -36,14 +36,14 @@ export const intializePassport = () => {
                     const newHashedPassword = createHash(newUser.password);
                     newUser.password = newHashedPassword;
                     const result = await UsersManagers.createUser(newUser);
-                    // result._doc.name = `${result._doc.first_name} ${result._doc.last_name}`;
+                    result._doc.name = `${result._doc.first_name} ${result._doc.last_name}`;
                     done(null, result);
                 } else {
                     console.log("usuario existente");
                     const result = await UsersManagers.getUser(
                         profile.profileUrl
                     );
-                    // result._doc.name = `${result._doc.first_name} ${result._doc.last_name}`;
+                    result._doc.name = `${result._doc.first_name} ${result._doc.last_name}`;
                     done(null, result);
                 }
             }

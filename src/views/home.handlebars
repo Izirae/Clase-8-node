@@ -55,7 +55,7 @@
           <td class="text-center"><img style="max-width: 200px;" src="{{image}}" /></td>
           <td class="text-center pt-5">{{stock}} unidades</td>
           <td class="text-center pt-5">
-            <button id="{{_id}}" type="button" onclick="addToCart(this.id)" class="btn btn-primary">
+            <button id="{{_id}}" name="{{../user.cart}}" type="button" onclick="addToCart(this.id, this.name)" class="btn btn-primary">
               Añadir al carrito
             </button>
           </td>
@@ -102,31 +102,33 @@
   </div>
 
   <script>
-    async function addToCart(id) {
-      let idProduct = id
-      let idCart = '64a357765be758012cc5dbeb'
-      let quantity = 2
-      let result = await axios.post(`/api/cart/${idCart}/products/${idProduct}/quantity/${quantity}`)
-      console.log(result.status)
-      if (result.status === 200) {
-        Swal.fire({
-          position: 'Center',
-          icon: 'success',
-          title: 'Productro Agregado Correctamente',
-          showConfirmButton: false,
-          timer: 1500
-        })
+    async function addToCart(id, cartId) {
+        console.log(cartId)
+        let idProduct = id
+        let idCart = cartId
+        let quantity = 1
+        let result = await axios.post(`/api/cart/${idCart}/products/${idProduct}/quantity/${quantity}`)
+        console.log(result.status)
+        if (result.status === 200) {
+          Swal.fire({
+            position: 'Center',
+            icon: 'success',
+            title: 'Producto Agregado Correctamente',
+            showConfirmButton: false,
+            timer: 1500
+          })
 
-      } else {
-        Swal.fire({
-          position: 'Center',
-          icon: 'error',
-          title: 'Error al Cargar el Producto',
-          showConfirmButton: false,
-          timer: 1500
-        })
+        } else {
+          Swal.fire({
+            position: 'Center',
+            icon: 'error',
+            title: 'Error al Cargar el Producto',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        }
       }
-    }
+
     function filtro() {
       let filtro = document.getElementById("filtro").value
       let filtroVal = document.getElementById("buscar").value
